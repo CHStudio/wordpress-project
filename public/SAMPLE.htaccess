@@ -1,0 +1,20 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	RewriteBase "/{server.pathname}"
+
+	#If the URL start with public stop redirect
+	RewriteRule wp\-cms\/index\.php$ - [L]
+
+	#If you request an URL it does not start with wp-cms
+	#Else the HTACCESS have done the redirect, you can go to the index.php to execute code
+	RewriteCond %{REQUEST_URI} ^/wp-cms
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)$ /wp-cms/index.php [L]
+
+	#wp-cms is not here so we add it :)
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)$ /wp-cms/$1 [L]
+</IfModule>
