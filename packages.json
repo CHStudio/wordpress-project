@@ -1,0 +1,7 @@
+{
+  "packages": {
+    "vendor/package-name": {
+      "dev-master": { @composer.json }
+    }
+  }
+}
