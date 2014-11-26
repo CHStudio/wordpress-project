@@ -1,0 +1,12 @@
+{
+	"name": "chstudio/wordpress-project",
+	"description": "A sample initialization project for WordPress website",
+	"license": "Apache-2.0",
+	"authors": [
+		{
+			"name": "Stephane HULARD",
+			"email": "s.hulard@chstudio.fr"
+		}
+	],
+	"require": {}
+}
