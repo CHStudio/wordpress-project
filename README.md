@@ -1,4 +1,4 @@
-wordpress-project
-=================
+Wordpress project creation helper
+=================================
 
-A sample initialization project for WordPress website
+This repository is an empty wordpress project that can be used to start a new website.
