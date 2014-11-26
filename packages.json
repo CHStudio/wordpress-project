@@ -1,7 +1,0 @@
-{
-  "packages": {
-    "chstudio/wordpress-project": {
-      "dev-master": { @composer.json }
-    }
-  }
-}
