@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DataBase project builder" basedir="." default="help">
+	<!-- Load environment specific configuration default is build.properties -->
+	<if>
+		<available file="config/db.${build.env}.properties" property="" />
+		<then>
+			<property file="config/db.${build.env}.properties" override="false" />
+		</then>
+		<else>
+			<if>
+				<available file="config/db.properties" property="" />
+				<then>
+					<property file="config/db.properties" override="false" />
+				</then>
+				<else>
+					<fail message="Property file does not defined! Please create db.properties!" />
+				</else>
+			</if>
+		</else>
+	</if>
+
+	<if>
+		<os family="unix"/>
+		<then>
+			<php expression="str_replace(array('(', ')'), array('\(', '\)'), '${db.pass}');" returnProperty="db.pass.cmd" />
+		</then>
+		<else>
+			<property name="db.pass.cmd" value="${db.pass}" />
+		</else>
+	</if>
+
+<!--################################################################################-->
+	<target name="db:help" description="Print help for current phing command">
+		<echo msg="Specific database commands:" />
+		<echo msg=' - db:help     -> Print current help' />
+		<echo msg=' - db:backup   -> Backup current database to a .sql file' />
+		<echo msg=' - db:restore  -> Restore currently backuped database' />
+		<echo msg=' - db:execute  -> Execute a query inside the current database' />
+		<echo msg=' - db:details  -> Show current configuration' />
+	</target>
+<!--################################################################################-->
+	<target name="db:details" description="Show current configuration">
+		<echo msg="These are current db variables:" />
+		<echo msg='Credentials:' />
+		<echo msg='- db.user     -> ${db.user}' />
+		<echo msg='- db.pass     -> ${db.pass}' />
+		<echo msg='- db.name     -> ${db.name}' />
+		<echo msg='- db.host     -> ${db.host}' />
+		<echo msg='' />
+		<echo msg='Configuration:' />
+		<echo msg='- db.charset  -> ${db.charset}' />
+		<echo msg='- db.prefix   -> ${db.prefix}' />
+		<echo msg='- db.collate  -> ${db.collate}' />
+		<echo msg='' />
+		<echo msg='Programs path:' />
+		<echo msg='- db.program.mysql      -> ${db.program.mysql}' />
+		<echo msg='- db.program.mysqldump  -> ${db.program.mysqldump}' />
+		<echo msg='' />
+		<echo msg='Backup and restore file:' />
+		<echo msg='- db.path.backupfolder  -> ${db.path.backupfolder}' />
+		<echo msg='- db.path.backupfile    -> ${db.path.backupfile}' />
+	</target>
+<!--################################################################################-->
+	<target name="db:backup" description="Backup the current database inside a content archive">
+		<!-- If dump folder does not exists, add it -->
+		<if>
+			<not>
+				<available file="${db.path.backupfolder}" type="dir" property="" />
+			</not>
+			<then>
+				<fail message="Database backup folder does not exists : ${db.path.backupfolder}" />
+			</then>
+		</if>
+		<!-- Dump Current DB -->
+		<exec command="${db.program.mysqldump} --delayed-insert --skip-extended-insert --host=${db.host} --user=${db.user} --password=${db.pass.cmd} ${db.name} --result-file=${db.path.backupfolder}/${db.path.backupfile}" />
+	</target>
+<!--################################################################################-->
+	<target name="db:restore" depends="helper:secure-by-input" description="Restore backuped database">
+		<exec command='${db.program.mysql} --user=${db.user} --password=${db.pass.cmd} --host=${db.host} --skip-column-names --silent --execute="SHOW TABLES LIKE \"${db.prefix}\";" ${db.name} | while read table; do ${db.program.mysql} --user=${db.user} --password=${db.pass.cmd} --host=${db.host} --execute="DROP TABLE $table;" ${db.name}; done' logoutput="true" />
+		<exec command="${db.program.mysql} --user=${db.user} --password=${db.pass.cmd} --host=${db.host} ${db.name} &lt; ${db.path.backupfolder}/${db.path.backupfile}" logoutput="true" />
+	</target>
+<!--################################################################################-->
+	<target name="db:execute" description="Execute a query in the current database">
+		<if>
+			<isset property="query" />
+			<then>
+				<exec command='${db.program.mysql} --user=${db.user} --password=${db.pass.cmd} --host=${db.host} --execute="${query};" ${db.name}' logoutput="true" />
+			</then>
+			<else>
+				<echo message="You need to call this target with query parameter set" />
+			</else>
+		</if>
+	</target>
+</project>

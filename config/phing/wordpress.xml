@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="WordPress project builder" basedir="." default="wp:help">
+	<!-- Load environment specific configuration default is build.properties -->
+	<if>
+		<available file="config/wp.${build.env}.properties" property="" />
+		<then>
+			<property file="config/wp.${build.env}.properties" override="false" />
+		</then>
+		<else>
+			<if>
+				<available file="config/wp.properties" property="" />
+				<then>
+					<property file="config/wp.properties" override="false" />
+				</then>
+				<else>
+					<fail message="Property file does not defined! Please create wp.properties!" />
+				</else>
+			</if>
+		</else>
+	</if>
+
+	<!-- Build a valid HostName with port if different of 80 -->
+	<if>
+		<and>
+			<not><equals arg1="${server.port}" arg2="80" /></not>
+			<not><equals arg1="${server.port}" arg2="" /></not>
+		</and>
+		<then>
+			<property name="server.hostname" value="${server.hostname}:${server.port}" override="true" />
+		</then>
+	</if>
+
+<!--################################################################################-->
+	<target name="wp:help" description="Print help for current phing command">
+		<echo msg="Specific wordpress commands:" />
+		<echo msg=' - wp:help            -> Print current help' />
+		<echo msg=' - wp:init            -> Build wp-config.php file from the SAMPLE.wp-config.php example (maybe with regexp can be done from wp-config-sample.php)' />
+		<echo msg=' - wp:uploads:backup  -> Backup uploads content inside the data folder' />
+		<echo msg=' - wp:uploads:restore -> Restore uploads content from the data folder archive' />
+		<echo msg=' - wp:migrate         -> Migrate wordpress from an environment to another' />
+	</target>
+<!--################################################################################-->
+	<target name="wp:init" description="Initialize wordpress configuration in the current environment from build.properties">
+		<copy file="public/SAMPLE.wp-config.php" tofile="public/wp-config.php" overwrite="true"/>
+		<copy file="public/SAMPLE.htaccess" tofile="public/.htaccess" overwrite="true"/>
+
+		<reflexive>
+			<fileset dir="public">
+				<include name="wp-config.php" />
+				<include name=".htaccess" />
+			</fileset>
+
+			<filterchain>
+				<replacetokens begintoken="{" endtoken="}">
+					<token key="server.protocol" value="${server.protocol}" />
+					<token key="server.hostname" value="${server.hostname}" />
+					<token key="server.pathname" value="${server.pathname}" />
+					<token key="db.host" value="${db.host}" />
+					<token key="db.user" value="${db.user}" />
+					<token key="db.pass" value="${db.pass}" />
+					<token key="db.name" value="${db.name}" />
+					<token key="db.charset" value="${db.charset}" />
+					<token key="db.collate" value="${db.collate}" />
+					<token key="db.prefix" value="${db.prefix}" />
+					<token key="wp.debug" value="${wp.debug}" />
+					<token key="wp.lang" value="${wp.lang}" />
+					<token key="wp.theme" value="${wp.theme}" />
+					<token key="wp.key.auth" value="${wp.key.auth}" />
+					<token key="wp.key.secure_auth" value="${wp.key.secure_auth}" />
+					<token key="wp.key.logged_in" value="${wp.key.logged_in}" />
+					<token key="wp.key.nonce" value="${wp.key.nonce}" />
+					<token key="wp.salt.auth" value="${wp.salt.auth}" />
+					<token key="wp.salt.secure_auth" value="${wp.salt.secure_auth}" />
+					<token key="wp.salt.logged_in" value="${wp.salt.logged_in}" />
+					<token key="wp.salt.nonce" value="${wp.salt.nonce}" />
+					<token key="wp.salt.nonce" value="${wp.salt.nonce}" />
+					<token key="ga.tracker" value="${ga.tracker}" />
+					<token key="mail.contact" value="${mail.contact}" />
+				</replacetokens>
+			</filterchain>
+		</reflexive>
+	</target>
+<!--################################################################################-->
+	<target name="wp:uploads:backup" description="Save current uploads folder to a ZIP">
+		<tar destfile="${wp.path.data}/uploads.tar.gz" basedir="public/wp-content/uploads" compression="gzip" />
+	</target>
+<!--################################################################################-->
+	<target name="wp:uploads:restore" depends="helper:secure-by-input" description="Restore uploads folder from previously backuped ZIP">
+		<!-- Clean up folder to have an empty uploads folder -->
+		<if>
+			<not>
+				<available file="public/wp-content/uploads" type="dir" property="" />
+			</not>
+			<then>
+				<mkdir dir="public/wp-content/uploads" mode="0777" />
+			</then>
+			<else>
+				<delete includeemptydirs="true" failonerror="true" >
+					<fileset dir="public/wp-content/uploads" defaultexcludes="true">
+						<include name="**/**" />
+					</fileset>
+				</delete>
+			</else>
+		</if>
+
+		<!-- Extract tar if exists -->
+		<if>
+			<available  file="${wp.path.data}/uploads.tar.gz" property="" />
+			<then>
+				<untar file="${wp.path.data}/uploads.tar.gz" todir="public/wp-content/uploads" />
+			</then>
+		</if>
+		<chmod mode="0777">
+			<fileset dir="public/wp-content/uploads" defaultexcludes="true">
+				<include name="**/**" />
+			</fileset>
+		</chmod>
+	</target>
+<!--################################################################################-->
+	<target name="wp:migrate" description="Migrate a wordpress database from a domain to another">
+		<if>
+			<and>
+				<isset property="domain.current" />
+				<isset property="domain.previous" />
+			</and>
+			<then>
+				<echo message="Start wordpress migration:" />
+				<echo message=" - previous domain: ${domain.previous}" />
+				<echo message=" - current domain: ${domain.current}" />
+			</then>
+			<else>
+				<fail message="We can't migrate database because you did not defined 'domain.current' or 'domain.previous' properties..." />
+			</else>
+		</if>
+
+		<pdosqlexec url="mysql:host=${db.host};dbname=${db.name}" userid="${db.user}" password="${db.pass}">
+		  <transaction>
+		  	UPDATE ${db.prefix}options
+		  	SET option_value = replace(option_value, '${domain.previous}', '${domain.current}')
+		  	WHERE option_name = 'home' OR option_name = 'siteurl';
+
+				UPDATE ${db.prefix}posts
+				SET guid = replace(guid, '${domain.previous}','${domain.current}');
+
+				UPDATE ${db.prefix}posts
+				SET post_content = replace(post_content, '${domain.previous}', '${domain.current}');
+		  </transaction>
+		</pdosqlexec>
+	</target>
+</project>
