@@ -1,6 +1,6 @@
 {
   "packages": {
-    "vendor/package-name": {
+    "chstudio/wordpress-project": {
       "dev-master": { @composer.json }
     }
   }
