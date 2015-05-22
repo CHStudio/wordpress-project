@@ -1,2 +1,9 @@
+#System files
+.DS_Store
+*~
+
+/bin/*
+!/bin/bump
+
 .htaccess
 /vendor/
