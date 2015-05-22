@@ -16,22 +16,22 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', '{db.name}');
+define('DB_NAME', '${db.name}');
 
 /** MySQL database username */
-define('DB_USER', '{db.user}');
+define('DB_USER', '${db.user}');
 
 /** MySQL database password */
-define('DB_PASSWORD', '{db.pass}');
+define('DB_PASSWORD', '${db.pass}');
 
 /** MySQL hostname */
-define('DB_HOST', '{db.host}');
+define('DB_HOST', '${db.host}');
 
 /** Database Charset to use in creating database tables. */
-define('DB_CHARSET', '{db.charset}');
+define('DB_CHARSET', '${db.charset}');
 
 /** The Database Collate type. Don't change this if in doubt. */
-define('DB_COLLATE', '{db.collate}');
+define('DB_COLLATE', '${db.collate}');
 
 /**#@+
  * Authentication Unique Keys and Salts.
@@ -42,14 +42,14 @@ define('DB_COLLATE', '{db.collate}');
  *
  * @since 2.6.0
  */
-define('AUTH_KEY',         '{wp.key.auth}');
-define('SECURE_AUTH_KEY',  '{wp.key.secure_auth}');
-define('LOGGED_IN_KEY',    '{wp.key.logged_in}');
-define('NONCE_KEY',        '{wp.key.nonce}');
-define('AUTH_SALT',        '{wp.salt.auth}');
-define('SECURE_AUTH_SALT', '{wp.salt.secure_auth}');
-define('LOGGED_IN_SALT',   '{wp.salt.logged_in}');
-define('NONCE_SALT',       '{wp.salt.nonce}');
+define('AUTH_KEY',         '${wp.key.auth}');
+define('SECURE_AUTH_KEY',  '${wp.key.secure_auth}');
+define('LOGGED_IN_KEY',    '${wp.key.logged_in}');
+define('NONCE_KEY',        '${wp.key.nonce}');
+define('AUTH_SALT',        '${wp.salt.auth}');
+define('SECURE_AUTH_SALT', '${wp.salt.secure_auth}');
+define('LOGGED_IN_SALT',   '${wp.salt.logged_in}');
+define('NONCE_SALT',       '${wp.salt.nonce}');
 
 /**#@-*/
 
@@ -59,7 +59,7 @@ define('NONCE_SALT',       '{wp.salt.nonce}');
  * You can have multiple installations in one database if you give each a unique
  * prefix. Only numbers, letters, and underscores please!
  */
-$table_prefix  = '{db.prefix}';
+$table_prefix  = '${db.prefix}';
 
 /**
  * WordPress Localized Language, defaults to English.
@@ -69,7 +69,7 @@ $table_prefix  = '{db.prefix}';
  * de_DE.mo to wp-content/languages and set WPLANG to 'de_DE' to enable German
  * language support.
  */
-define('WPLANG', '{wp.lang}');
+define('WPLANG', '${wp.lang}');
 
 /**
  * For developers: WordPress debugging mode.
@@ -81,14 +81,13 @@ define('WPLANG', '{wp.lang}');
 define('WP_DEBUG', false);
 
 //Define specific website URL
-define('WP_HOME', '{server.protocol}://{server.hostname}/{server.pathname}');
-define('WP_SITEURL', '{server.protocol}://{server.hostname}/{server.pathname}');
+define('WP_HOME', '${server.protocol}://${server.qualified-hostname}/${server.pathname}');
+define('WP_SITEURL', '${server.protocol}://${server.qualified-hostname}/${server.pathname}');
 
 define('WP_CONTENT_DIR', dirname(__FILE__).'/wp-content');
-define('WP_CONTENT_URL', '{server.protocol}://{server.hostname}/{server.pathname}wp-content');
-define('WP_DEFAULT_THEME', '{wp.theme}');
+define('WP_CONTENT_URL', '${server.protocol}://${server.qualified-hostname}/${server.pathname}wp-content');
+define('WP_DEFAULT_THEME', '${wp.theme}');
 
-define('GA_TRACKER', 'UA-34900512-1');
 /* That's all, stop editing! Happy blogging. */
 
 /** Absolute path to the WordPress directory. */

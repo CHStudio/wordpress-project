@@ -1,7 +1,7 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 
-	RewriteBase "/{server.pathname}"
+	RewriteBase "/${server.pathname}"
 
 	#If the URL start with public stop redirect
 	RewriteRule wp\-cms\/index\.php$ - [L]
