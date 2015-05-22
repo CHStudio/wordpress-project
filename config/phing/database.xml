@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="DataBase project builder" basedir="." default="help">
 	<!-- Load environment specific configuration default is build.properties -->
-	<if>
-		<available file="config/db.${build.env}.properties" property="" />
-		<then>
-			<property file="config/db.${build.env}.properties" override="false" />
-		</then>
-		<else>
-			<if>
-				<available file="config/db.properties" property="" />
-				<then>
-					<property file="config/db.properties" override="false" />
-				</then>
-				<else>
-					<fail message="Property file does not defined! Please create db.properties!" />
-				</else>
-			</if>
-		</else>
-	</if>
+	<target name="db:check-configuration">
+		<if>
+			<available file="config/db.${build.env}.properties" property="" />
+			<then>
+				<property file="config/db.${build.env}.properties" override="false" />
+			</then>
+			<else>
+				<if>
+					<available file="config/db.properties" property="" />
+					<then>
+						<property file="config/db.properties" override="false" />
+					</then>
+					<else>
+						<fail message="Property file does not defined! Please create db.properties!" />
+					</else>
+				</if>
+			</else>
+		</if>
+	</target>
 
 	<if>
 		<os family="unix"/>
@@ -30,7 +32,7 @@
 	</if>
 
 <!--################################################################################-->
-	<target name="db:help" description="Print help for current phing command">
+	<target name="db:help" depends="db:check-configuration" description="Print help for current phing command">
 		<echo msg="Specific database commands:" />
 		<echo msg=' - db:help     -> Print current help' />
 		<echo msg=' - db:backup   -> Backup current database to a .sql file' />
@@ -39,7 +41,7 @@
 		<echo msg=' - db:details  -> Show current configuration' />
 	</target>
 <!--################################################################################-->
-	<target name="db:details" description="Show current configuration">
+	<target name="db:details" depends="db:check-configuration" description="Show current configuration">
 		<echo msg="These are current db variables:" />
 		<echo msg='Credentials:' />
 		<echo msg='- db.user     -> ${db.user}' />
@@ -61,7 +63,7 @@
 		<echo msg='- db.path.backupfile    -> ${db.path.backupfile}' />
 	</target>
 <!--################################################################################-->
-	<target name="db:backup" description="Backup the current database inside a content archive">
+	<target name="db:backup" depends="db:check-configuration" description="Backup the current database inside a content archive">
 		<!-- If dump folder does not exists, add it -->
 		<if>
 			<not>
@@ -75,12 +77,12 @@
 		<exec command="${db.program.mysqldump} --delayed-insert --skip-extended-insert --host=${db.host} --user=${db.user} --password=${db.pass.cmd} ${db.name} --result-file=${db.path.backupfolder}/${db.path.backupfile}" />
 	</target>
 <!--################################################################################-->
-	<target name="db:restore" depends="helper:secure-by-input" description="Restore backuped database">
+	<target name="db:restore" depends="db:check-configuration,helper:secure-by-input" description="Restore backuped database">
 		<exec command='${db.program.mysql} --user=${db.user} --password=${db.pass.cmd} --host=${db.host} --skip-column-names --silent --execute="SHOW TABLES LIKE \"${db.prefix}\";" ${db.name} | while read table; do ${db.program.mysql} --user=${db.user} --password=${db.pass.cmd} --host=${db.host} --execute="DROP TABLE $table;" ${db.name}; done' logoutput="true" />
 		<exec command="${db.program.mysql} --user=${db.user} --password=${db.pass.cmd} --host=${db.host} ${db.name} &lt; ${db.path.backupfolder}/${db.path.backupfile}" logoutput="true" />
 	</target>
 <!--################################################################################-->
-	<target name="db:execute" description="Execute a query in the current database">
+	<target name="db:execute" depends="db:check-configuration" description="Execute a query in the current database">
 		<if>
 			<isset property="query" />
 			<then>

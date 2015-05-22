@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="WordPress project builder" basedir="." default="wp:help">
 	<!-- Load environment specific configuration default is build.properties -->
-	<if>
-		<available file="config/wp.${build.env}.properties" property="" />
-		<then>
-			<property file="config/wp.${build.env}.properties" override="false" />
-		</then>
-		<else>
-			<if>
-				<available file="config/wp.properties" property="" />
-				<then>
-					<property file="config/wp.properties" override="false" />
-				</then>
-				<else>
-					<fail message="Property file does not defined! Please create wp.properties!" />
-				</else>
-			</if>
-		</else>
-	</if>
+	<target name="wp:check-configuration">
+		<if>
+			<available file="config/wp.${build.env}.properties" property="" />
+			<then>
+				<property file="config/wp.${build.env}.properties" override="false" />
+			</then>
+			<else>
+				<if>
+					<available file="config/wp.properties" property="" />
+					<then>
+						<property file="config/wp.properties" override="false" />
+					</then>
+					<else>
+						<fail message="Property file does not defined! Please create wp.properties!" />
+					</else>
+				</if>
+			</else>
+		</if>
+	</target>
 
 	<!-- Build a valid HostName with port if different of 80 -->
 	<if>
@@ -40,7 +42,7 @@
 		<echo msg=' - wp:migrate         -> Migrate wordpress from an environment to another' />
 	</target>
 <!--################################################################################-->
-	<target name="wp:init" description="Initialize wordpress configuration in the current environment from build.properties">
+	<target name="wp:init" depends="wp:check-configuration" description="Initialize wordpress configuration in the current environment from build.properties">
 		<copy file="public/SAMPLE.wp-config.php" tofile="public/wp-config.php" overwrite="true"/>
 		<copy file="public/SAMPLE.htaccess" tofile="public/.htaccess" overwrite="true"/>
 
@@ -81,11 +83,11 @@
 		</reflexive>
 	</target>
 <!--################################################################################-->
-	<target name="wp:uploads:backup" description="Save current uploads folder to a ZIP">
+	<target name="wp:uploads:backup" depends="wp:check-configuration" description="Save current uploads folder to a ZIP">
 		<tar destfile="${wp.path.data}/uploads.tar.gz" basedir="public/wp-content/uploads" compression="gzip" />
 	</target>
 <!--################################################################################-->
-	<target name="wp:uploads:restore" depends="helper:secure-by-input" description="Restore uploads folder from previously backuped ZIP">
+	<target name="wp:uploads:restore" depends="wp:check-configuration,helper:secure-by-input" description="Restore uploads folder from previously backuped ZIP">
 		<!-- Clean up folder to have an empty uploads folder -->
 		<if>
 			<not>
