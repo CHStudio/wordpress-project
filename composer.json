@@ -8,5 +8,12 @@
 			"email": "s.hulard@chstudio.fr"
 		}
 	],
-	"require": {}
+	"config": {
+		"bin-dir": "bin"
+	},
+	"require": {},
+	"require-dev": {
+		"phing/phing": "2.*",
+		"wp-cli/wp-cli": "0.*"
+	}
 }
