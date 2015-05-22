@@ -19,18 +19,21 @@
 				</if>
 			</else>
 		</if>
-	</target>
 
-	<!-- Build a valid HostName with port if different of 80 -->
-	<if>
-		<and>
-			<not><equals arg1="${server.port}" arg2="80" /></not>
-			<not><equals arg1="${server.port}" arg2="" /></not>
-		</and>
-		<then>
-			<property name="server.qualified-hostname" value="${server.hostname}:${server.port}" override="true" />
-		</then>
-	</if>
+		<!-- Build a valid HostName with port if different of 80 -->
+		<if>
+			<and>
+				<not><equals arg1="${server.port}" arg2="80" /></not>
+				<not><equals arg1="${server.port}" arg2="" /></not>
+			</and>
+			<then>
+				<property name="server.qualified-hostname" value="${server.hostname}:${server.port}" override="true" />
+			</then>
+			<else>
+				<property name="server.qualified-hostname" value="${server.hostname}" override="true" />
+			</else>
+		</if>
+	</target>
 
 <!--################################################################################-->
 	<target name="wp:help" description="Print help for current phing command">
