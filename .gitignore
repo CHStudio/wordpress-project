@@ -7,3 +7,5 @@
 
 .htaccess
 /vendor/
+
+wp-cli.local.yml
