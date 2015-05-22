@@ -3,6 +3,9 @@
 
 	RewriteBase "/${server.pathname}"
 
+	#Fix issue #1 invalid wp-admin redirect
+	RewriteRule ^wp\-admin$ /wp-admin/ [L,R=301]
+
 	#If the URL start with public stop redirect
 	RewriteRule wp\-cms\/index\.php$ - [L]
 
