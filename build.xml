@@ -45,8 +45,7 @@
 	</target>
 <!--################################################################################-->
 	<target name="env:install" description="Install current environment">
-		<exec command="git submodule update --force" logoutput="true" />
-		<phingcall target="wp:init" />
+		<phingcall target="env:init" />
 		<phingcall target="wp:install" />
 	</target>
 <!--################################################################################-->
