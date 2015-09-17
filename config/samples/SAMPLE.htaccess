@@ -1,3 +1,14 @@
+############################ PROTECT HTACCESS FILE #############################
+<Files .htaccess>
+	Order allow,deny
+	Deny from all
+</Files>
+
+############################ PROTECT FOLDER LISTING ############################
+Options -Indexes
+DirectoryIndex index.php
+
+############################ ACTIVATE REWRITE RULES ############################
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 
@@ -86,12 +97,3 @@ SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|swf)$ no-gzip
 	Header unset ETag
 	FileETag none
 </IfModule>
-
-############################ PROTECT HTACCESS FILE #############################
-<Files .htaccess>
-	Order allow,deny
-	Deny from all
-</Files>
-
-############################ PROTECT FOLDER LISTING ############################
-Options -Indexes
