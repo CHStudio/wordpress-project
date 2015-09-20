@@ -11,6 +11,12 @@
 	"config": {
 		"bin-dir": "bin"
 	},
+	"repositories":[
+		{
+			"type":"composer",
+			"url":"http://wpackagist.org"
+		}
+	],
 	"require": {},
 	"require-dev": {
 		"phing/phing": "2.*",
