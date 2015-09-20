@@ -21,5 +21,11 @@
 	"require-dev": {
 		"phing/phing": "2.*",
 		"wp-cli/wp-cli": "0.*"
+	},
+	"extra": {
+		"installer-paths": {
+			"public/wp-content/themes/{$name}/": ["type:wordpress-theme"],
+			"public/wp-content/plugins/{$name}/": ["type:wordpress-plugin"]
+		}
 	}
 }
