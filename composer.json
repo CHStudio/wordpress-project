@@ -1,31 +1,32 @@
 {
-	"name": "chstudio/wordpress-project",
-	"description": "A sample initialization project for WordPress website",
-	"license": "Apache-2.0",
-	"authors": [
-		{
-			"name": "Stephane HULARD",
-			"email": "s.hulard@chstudio.fr"
-		}
-	],
-	"config": {
-		"bin-dir": "bin"
-	},
-	"repositories":[
-		{
-			"type":"composer",
-			"url":"http://wpackagist.org"
-		}
-	],
-	"require": {},
-	"require-dev": {
-		"phing/phing": "2.*",
-		"wp-cli/wp-cli": "0.*"
-	},
-	"extra": {
-		"installer-paths": {
-			"public/wp-content/themes/{$name}/": ["type:wordpress-theme"],
-			"public/wp-content/plugins/{$name}/": ["type:wordpress-plugin"]
-		}
-	}
+    "name": "chstudio/wordpress-project",
+    "description": "A sample initialization project for WordPress website",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Stephane HULARD",
+            "email": "s.hulard@chstudio.fr"
+        }
+    ],
+    "config": {
+        "bin-dir": "bin"
+    },
+    "repositories":[
+        {
+            "type": "composer",
+            "url": "http://wpackagist.org"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phing/phing": "2.*",
+        "wp-cli/wp-cli": "0.*"
+    },
+    "extra": {
+        "installer-paths": {
+            "public/wp-content/themes/{$name}/": ["type:wordpress-theme"],
+            "public/wp-content/plugins/{$name}/": ["type:wordpress-plugin"],
+            "public/wp-content/mu-plugins/{$name}/": ["type:wordpress-muplugin"]
+        }
+    }
 }
