@@ -4,5 +4,6 @@
 .htaccess
 /vendor/
 /public/wp-cms/.htaccess
+/public/wp-content/languages
 
 wp-cli.local.yml
