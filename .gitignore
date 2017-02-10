@@ -1,9 +1,10 @@
 /bin/*
-!/bin/bump
 
 .htaccess
 /vendor/
-/public/wp-cms/.htaccess
-/public/wp-content/languages
+/public/wp-config.php
+/public/wp-cms/*
+/public/wp-content/*
+!/public/wp-content/themes
 
 wp-cli.local.yml
