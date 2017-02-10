@@ -1,3 +1,0 @@
-[submodule "public/wp-cms"]
-	path = public/wp-cms
-	url = https://github.com/wordpress/wordpress
