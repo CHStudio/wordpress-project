@@ -20,7 +20,8 @@
     "require": {},
     "require-dev": {
         "phing/phing": "~2.0",
-        "wp-cli/wp-cli": "~1.0"
+        "wp-cli/wp-cli": "~1.0",
+        "wp-coding-standards/wpcs": "^0.10.0"
     },
     "extra": {
         "installer-paths": {
@@ -28,5 +29,9 @@
             "public/wp-content/plugins/{$name}/": ["type:wordpress-plugin"],
             "public/wp-content/mu-plugins/{$name}/": ["type:wordpress-muplugin"]
         }
+    },
+    "scripts": {
+        "post-update-cmd": "phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs",
+        "cs": "phpcs --standard=phpcs.xml"
     }
 }
