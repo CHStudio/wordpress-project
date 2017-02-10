@@ -15,11 +15,18 @@
         {
             "type": "composer",
             "url": "https://wpackagist.org"
+        },
+        {
+            "type": "composer",
+            "url": "https://wp-cli.org/package-index/"
         }
     ],
-    "require": {},
+    "require": {
+        "wp-cli/wp-cli": "~1.0"
+    },
     "require-dev": {
-        "wp-cli/wp-cli": "~1.0",
+        "wp-cli/doctor-command": "^0.1.0",
+        "wp-cli/profile-command": "^0.3.0",
         "wp-coding-standards/wpcs": "^0.10.0"
     },
     "extra": {
