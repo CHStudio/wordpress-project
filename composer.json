@@ -4,7 +4,7 @@
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "Stephane HULARD",
+            "name": "Stéphane HULARD",
             "email": "s.hulard@chstudio.fr"
         }
     ],
@@ -19,8 +19,8 @@
     ],
     "require": {},
     "require-dev": {
-        "phing/phing": "2.*",
-        "wp-cli/wp-cli": "0.*"
+        "phing/phing": "~2.0",
+        "wp-cli/wp-cli": "~1.0"
     },
     "extra": {
         "installer-paths": {
