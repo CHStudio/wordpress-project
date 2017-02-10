@@ -1,4 +1,4 @@
-[WordPress](https://wordpress.org/) project creation helper
+[WordPress](https://wordpress.org/) project creation helper [![Latest Stable Version](https://img.shields.io/packagist/v/chstudio/wordpress-project.svg)](https://packagist.org/packages/chstudio/wordpress-project)
 ===========================================================
 
 This repository is an empty wordpress project that can be used to start a new website. It also contains some tools to
