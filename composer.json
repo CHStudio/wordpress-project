@@ -38,6 +38,7 @@
     },
     "scripts": {
         "post-update-cmd": "phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs",
-        "cs": "phpcs --standard=phpcs.xml"
+        "cs": "phpcs --standard=phpcs.xml",
+        "cbf": "phpcbf --standard=phpcs.xml"
     }
 }
