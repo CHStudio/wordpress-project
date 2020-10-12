@@ -90,3 +90,7 @@ We welcome everyone to contribute to this project. Below are some of the things 
 - Read [our contributing guide](CONTRIBUTING.md).
 - [Fork us](https://github.com/chstudio/wordpress-project/fork) and [request a pull](https://github.com/chstudio/wordpress-project/pulls) to the [develop](https://github.com/chstudio/wordpress-project/tree/develop) branch.
 - Submit [bug reports or feature requests](https://github.com/chstudio/wordpress-project/issues) to GitHub.
+
+## LICENSE
+
+Apache License 2.0 
